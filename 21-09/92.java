@@ -1,0 +1,37 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+        if (left == right) return head;
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode p = dummy;
+        // p指向m的前一个节点
+        for (int i = 1; i < left; i++) {
+            p = p.next;
+        }
+        // 206题反转模板
+        // 将m和n之间的指针翻转（不包含第m个节点）
+        // pre指向m，cur指向m的下一个节点，也就是从m后一个开始反转
+        ListNode pre = p.next, cur = pre.next;
+        for (int i = left; i < right; i++) {
+            ListNode nex = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = nex;
+        }
+        // p.next.next是m的指针，指向n的下一个节点（反转后cur的位置）
+        p.next.next = cur;
+        p.next = pre;
+        // p的指针指向n，也就是反转之后pre的位置
+        return dummy.next;
+    }
+}
