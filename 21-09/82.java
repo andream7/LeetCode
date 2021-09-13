@@ -17,7 +17,7 @@ class Solution {
         dummy.next = head;
 
         ListNode p = dummy;
-        while (p != null) {
+        while (p.next != null) {
             ListNode q = p.next;
             // q是p的下一个元素
             // q定位到第一个和q不相等的位置
