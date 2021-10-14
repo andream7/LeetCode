@@ -1,10 +1,33 @@
 /**
-暴力枚举。
-首先枚举回文串的中心i，然后分两种情况向两边扩展边界，直到遇到不同字符为止。
-1. 回文串长度是奇数：依次判断s[i - k] == s[i + k], k = 1, 2, 3...
-2. 回文串长度是偶数：依次判断s[i - k] == s[i + k - 1], k = 1, 2, 3...
-
-如果遇到不同字符，我们就找到了以i为中心的回文串边界。
+算法：dp
+如果s[i : j]为回文串，那么一定满足s[i + 1 : j - 1]是回文串，并且s[i] == s[j];
+状态转移方程： dp[l][r] = dp[l + 1][r - 1] && (s[l] == s[r]);
  */
 
+class Solution {
+    public String longestPalindrome(String s) {
+        boolean[][] dp = new boolean[1010][1010];
 
+        int n = s.length();
+        // start记录起点，length记录最大长度
+        int start = 0, length = 0;
+        // 枚举长度
+        for (int len = 1; len <= n; len ++) {
+            // 枚举起点
+            for (int i = 0; i + len - 1 < n; i++) {
+                int l = i, r = i + len - 1;
+                // 只有一个字母，是回文串
+                if (len == 1) dp[i][i] = true;
+                else if (len == 2) dp[l][r] = s.charAt(l) == s.charAt(r);
+                else {
+                    dp[l][r] = dp[l + 1][r - 1] && (s.charAt(l) == s.charAt(r));
+                }
+                if (dp[l][r] && r - l + 1 >= length) {
+                    length = r - l + 1;
+                    start = l;
+                }
+            }
+        }
+        return s.substring(start, start + length);
+    }
+}
