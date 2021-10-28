@@ -3,35 +3,33 @@
  */
 class Solution {
     public int search(int[] nums, int target) {
-        int n = nums.length;
-        // 处理边界情况
-        if (n == 0) return -1;
-        if (n == 1) return nums[0] == target ? 0 : -1;
-
-        // 查找旋转点
-        int cutoff = -1;
-        for (int i = 0; i < n - 1; i ++) {
-            if (nums[i] > nums[i + 1]) {
-                cutoff = i;
-                break;
-            }
+        // 边界情况
+        if (nums.length == 0) return -1;
+        // 二分查找找到最小值
+        int len = nums.length - 1;
+        int l = 0, r = nums.length - 1;
+        while (l < r) {
+            int mid = l + r >> 1;
+            // 说明小的部分多，r应该左移
+            if (nums[mid] <= nums[len]) r = mid;
+            else l = mid + 1;
         }
+        // l==r的位置就是最小值所在的位置
+        // 判断目标值在哪个区间
+        if (target <= nums[len]) {
+            r = len;
+        } else {
+           l = 0;
+           r --; 
+        } 
 
-        int left = find(nums, 0, cutoff, target);
-        int right = find(nums, cutoff + 1, n - 1, target);
-
-        return left == -1 ? right : left;
-    }
-
-    // 二分查找模板
-    public int find(int[] nums, int start, int end, int target) {
-        while (start <= end) {
-            int mid = (end - start) / 2 + start;
-            if (nums[mid] == target) return mid;
-            else if (nums[mid] > target) end = mid - 1;
-            else start = mid + 1;
+        while (l < r) {
+            int mid = l + r >> 1;
+            if (nums[mid] >= target) r = mid;
+            else l = mid + 1;
         }
-        // 如果没有查找到就返回-1
-        return -1;
+        
+        if (nums[l] == target) return l;
+        else return -1;
     }
 }

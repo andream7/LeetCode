@@ -5,22 +5,16 @@
 class Solution {
     public int coinChange(int[] coins, int amount) {
         int[] dp = new int[amount + 1];
-
         Arrays.fill(dp, Integer.MAX_VALUE);
+        //  起始条件
         dp[0] = 0;
 
-        // 从1到amount进行迭代
-        for (int curAmount = 1; curAmount <= amount; curAmount ++) {
-            // 枚举每一个面值的硬币
-            for (int coin: coins) {
-                int leftAmount = curAmount - coin;
-                // 注意第二个条件
-                if (leftAmount < 0 || dp[leftAmount] == Integer.MAX_VALUE) continue;
-
-                // 更新枚举到当前curamount需要的硬币个数
-                dp[curAmount] = Math.min(dp[leftAmount] + 1, dp[curAmount]);
+        for (int i = 0; i < coins.length; i++) {
+            for (int j = coins[i]; j <= amount; j++) {
+                dp[j] = Math.min(dp[j], dp[j - coins[i]] + 1);
             }
         }
-        return dp[amount] == Integer.MAX_VALUE ? -1 : dp[amount];
+        if (dp[amount] == Integer.MAX_VALUE) dp[amount] = -1;
+        return dp[amount];
     }
 }
